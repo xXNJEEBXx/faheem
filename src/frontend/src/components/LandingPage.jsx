@@ -25,7 +25,7 @@ const LandingPage = ({ onStartChat, onStartChallenge }) => {
       <main className="flex-grow flex items-center justify-center p-4 md:p-8">
         <div className="max-w-7xl w-full grid md:grid-cols-2 gap-12 items-center">
           {/* Right Column: Intro & Actions */}
-          <div className="flex flex-col items-center md:items-start text-center md:text-right space-y-8 animate-fade-in-up order-2 md:order-1">
+          <div className="flex flex-col items-center md:items-start text-center md:text-right space-y-8 animate-fade-in-up order-1">
             <div
               className="relative group cursor-pointer self-center md:self-start"
               onClick={() => setAvatarState("wink")}
@@ -58,7 +58,7 @@ const LandingPage = ({ onStartChat, onStartChallenge }) => {
           </div>
 
           {/* Left Column: Live Chat Demo */}
-          <div className="relative order-1 md:order-2 flex justify-center md:justify-end">
+          <div className="relative order-2 flex justify-center md:justify-end">
             {/* Phone Frame Effect */}
             <div className="absolute -inset-4 bg-gradient-to-tr from-absher-green to-emerald-400 rounded-[2.5rem] opacity-20 blur-xl animate-pulse"></div>
             <div className="relative z-10 w-full max-w-md transform scale-90 md:scale-100 origin-top">
