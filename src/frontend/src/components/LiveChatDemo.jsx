@@ -224,7 +224,7 @@ const LiveChatDemo = () => {
       </div>
 
       {/* Chat Area */}
-      <div 
+      <div
         ref={chatAreaRef}
         className="h-[450px] bg-gray-50 p-4 overflow-y-auto flex flex-col gap-3"
       >

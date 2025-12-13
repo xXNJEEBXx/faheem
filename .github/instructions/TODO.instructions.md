@@ -20,8 +20,18 @@
 - [x] تثبيت Laravel في مجلد `src/backend`
 - [x] تثبيت React في مجلد `src/frontend`
 - [x] ربط قاعدة البيانات MySQL (Railway) مع Laravel
+- [x] ربط المشروع بمستودع GitHub
+- [x] إنشاء واجهة المستخدم (Frontend) مع Tailwind CSS
+- [x] تطوير صفحة الهبوط (Landing Page) مع شخصية "فهيم"
+- [x] تطوير واجهة المحادثة (Chat Interface) مع السيناريوهات المطلوبة
+- [x] تطوير تحدي أبشر (Absher Challenge)
+- [x] إعداد Backend API للمحادثة
 
 ## 🚨 المهام المطلوبة الآن
+
+_لا توجد مهام مطلوبة حالياً._
+
+---
 
 _لا توجد مهام مطلوبة حالياً._
 

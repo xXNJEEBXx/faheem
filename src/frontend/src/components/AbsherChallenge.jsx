@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 
 // Helper function to call Gemini API
 const callGeminiAPI = async (history, persona) => {
-  const API_KEY = "AIzaSyCQyrBtlzfkNBWCfkk0SBu7QwPMc8ENBnw";
+  const API_KEY = "AIzaSyCQ4ejuQoZhPyZ7qUiqKI5YHhsle8FAtyg";
 
   try {
     const systemPrompt =

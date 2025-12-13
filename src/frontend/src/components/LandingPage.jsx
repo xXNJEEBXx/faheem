@@ -4,6 +4,7 @@ import LiveChatDemo from "./LiveChatDemo";
 
 const LandingPage = ({ onStartChat, onStartChallenge }) => {
   const [avatarState, setAvatarState] = useState("wink");
+  const [showMore, setShowMore] = useState(false);
 
   useEffect(() => {
     // Initial wink then switch to idle
@@ -54,6 +55,62 @@ const LandingPage = ({ onStartChat, onStartChallenge }) => {
                 <span>تحدي أبشر</span>
                 <span>🏆</span>
               </button>
+            </div>
+
+            {/* About Section */}
+            <div className="w-full bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-100 shadow-sm mt-6">
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">🤖</span>
+                  <div>
+                    <h3 className="font-bold text-gray-800">ما هو فهيم؟</h3>
+                    <p className="text-gray-600 text-sm">مساعد ذكي يفهم احتياجاتك ويخدمك بطريقة طبيعية وسلسة.</p>
+                  </div>
+                </div>
+
+                {showMore && (
+                  <>
+                    <div className="flex items-start gap-3">
+                      <span className="text-2xl">🧠</span>
+                      <div>
+                        <h3 className="font-bold text-gray-800">كيف يتعلم؟</h3>
+                        <p className="text-gray-600 text-sm">يستخدم تقنيات التعلم المعزز (RLHF) للتطور من كل محادثة.</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                      <span className="text-2xl">🎯</span>
+                      <div>
+                        <h3 className="font-bold text-gray-800">الهدف</h3>
+                        <p className="text-gray-600 text-sm">تحسين تجربة الخدمات الحكومية الرقمية للجميع.</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                      <span className="text-2xl">⚠️</span>
+                      <div>
+                        <h3 className="font-bold text-gray-800">تنويه</h3>
+                        <p className="text-gray-600 text-sm">هذا ديمو تجريبي، لا يتم حفظ أي بيانات حساسة.</p>
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                <button
+                  onClick={() => setShowMore(!showMore)}
+                  className="text-absher-green font-medium text-sm hover:underline flex items-center gap-1 mt-2"
+                >
+                  {showMore ? "إخفاء" : "اقرأ المزيد"}
+                  <svg
+                    className={`w-4 h-4 transition-transform ${showMore ? "rotate-180" : ""}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
 
