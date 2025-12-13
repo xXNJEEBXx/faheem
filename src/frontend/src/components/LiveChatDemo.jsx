@@ -112,11 +112,16 @@ const LiveChatDemo = () => {
   const [step, setStep] = useState(0);
   const containerRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
-  const messagesEndRef = useRef(null);
+  const chatAreaRef = useRef(null);
   const [clickedAction, setClickedAction] = useState(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (chatAreaRef.current) {
+      chatAreaRef.current.scrollTo({
+        top: chatAreaRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
   };
 
   useEffect(() => {
@@ -219,7 +224,10 @@ const LiveChatDemo = () => {
       </div>
 
       {/* Chat Area */}
-      <div className="h-[450px] bg-gray-50 p-4 overflow-y-auto flex flex-col gap-3">
+      <div 
+        ref={chatAreaRef}
+        className="h-[450px] bg-gray-50 p-4 overflow-y-auto flex flex-col gap-3"
+      >
         {messages.map((msg, idx) => (
           <div
             key={idx}
@@ -289,7 +297,6 @@ const LiveChatDemo = () => {
             </div>
           </div>
         )}
-        <div ref={messagesEndRef} />
       </div>
 
       {/* Fake Input Area */}
