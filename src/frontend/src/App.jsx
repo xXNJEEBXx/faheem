@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import LandingPage from "./components/LandingPage";
 import ChatInterface from "./components/ChatInterface";
 import AbsherChallenge from "./components/AbsherChallenge";
+import AboutFaheem from "./components/AboutFaheem";
 
 function App() {
-  const [currentView, setCurrentView] = useState("landing"); // landing, chat, challenge
+  const [currentView, setCurrentView] = useState("landing"); // landing, chat, challenge, about
 
   const renderView = () => {
     switch (currentView) {
@@ -12,11 +13,14 @@ function App() {
         return <ChatInterface onBack={() => setCurrentView("landing")} />;
       case "challenge":
         return <AbsherChallenge onBack={() => setCurrentView("landing")} />;
+      case "about":
+        return <AboutFaheem onBack={() => setCurrentView("landing")} onStartChallenge={() => setCurrentView("challenge")} />;
       default:
         return (
           <LandingPage
             onStartChat={() => setCurrentView("chat")}
             onStartChallenge={() => setCurrentView("challenge")}
+            onAbout={() => setCurrentView("about")}
           />
         );
     }

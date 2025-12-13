@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import FaheemAvatar from "./FaheemAvatar";
 import LiveChatDemo from "./LiveChatDemo";
 
-const LandingPage = ({ onStartChat, onStartChallenge }) => {
+const LandingPage = ({ onStartChat, onStartChallenge, onAbout }) => {
   const [avatarState, setAvatarState] = useState("wink");
 
   useEffect(() => {
@@ -53,6 +53,12 @@ const LandingPage = ({ onStartChat, onStartChallenge }) => {
               >
                 <span>تحدي أبشر</span>
                 <span>🏆</span>
+              </button>
+              <button
+                onClick={onAbout}
+                className="px-8 py-4 bg-absher-green/10 text-absher-green border-2 border-transparent rounded-xl text-lg font-bold hover:bg-absher-green/20 transition-all transform hover:scale-105 flex items-center justify-center gap-2"
+              >
+                <span>عن فهيم</span>
               </button>
             </div>
           </div>
