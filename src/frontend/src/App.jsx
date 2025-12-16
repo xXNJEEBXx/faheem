@@ -14,7 +14,12 @@ function App() {
       case "challenge":
         return <AbsherChallenge onBack={() => setCurrentView("landing")} />;
       case "about":
-        return <AboutFaheem onBack={() => setCurrentView("landing")} onStartChallenge={() => setCurrentView("challenge")} />;
+        return (
+          <AboutFaheem
+            onBack={() => setCurrentView("landing")}
+            onStartChallenge={() => setCurrentView("challenge")}
+          />
+        );
       default:
         return (
           <LandingPage

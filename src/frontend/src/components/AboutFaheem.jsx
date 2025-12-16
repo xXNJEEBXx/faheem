@@ -127,21 +127,30 @@ const AboutFaheem = ({ onBack, onStartChallenge }) => {
         {/* CTA Section */}
         <section className="text-center mb-12">
           <div className="bg-white rounded-2xl shadow-lg p-8 max-w-2xl mx-auto">
-            <h3 className="text-xl font-bold text-gray-800 mb-3">ما هو تحدي أبشر؟</h3>
+            <h3 className="text-xl font-bold text-gray-800 mb-3">
+              ما هو تحدي أبشر؟
+            </h3>
             <p className="text-gray-600 leading-relaxed mb-6">
-              هو بيئة اختبار صُممت بهدف تطوير قدرات فهيم على محاكاة الحوار البشري. من خلال تفاعلك معه ومحاولتك كشف هويته، تساهم في تدريبه ليصبح أكثر ذكاءً وطبيعية في خدمة المستفيدين.
+              هو بيئة اختبار صُممت بهدف تطوير قدرات فهيم على محاكاة الحوار
+              البشري. من خلال تفاعلك معه ومحاولتك كشف هويته، تساهم في تدريبه
+              ليصبح أكثر ذكاءً وطبيعية في خدمة المستفيدين.
             </p>
-            
-            <h3 className="text-xl font-bold text-gray-800 mb-3">كيف يتطور فهيم؟</h3>
+
+            <h3 className="text-xl font-bold text-gray-800 mb-3">
+              كيف يتطور فهيم؟
+            </h3>
             <p className="text-gray-600 leading-relaxed mb-6">
-              يتعلم فهيم من كل محادثة يجريها معك! باستخدام تقنيات التعلم المعزز (RLHF)، يقوم بتحليل أسلوبك في الكلام، والردود التي خدعتك أو كشفت هويته.
+              يتعلم فهيم من كل محادثة يجريها معك! باستخدام تقنيات التعلم المعزز
+              (RLHF)، يقوم بتحليل أسلوبك في الكلام، والردود التي خدعتك أو كشفت
+              هويته.
             </p>
-            
+
             <h3 className="text-xl font-bold text-gray-800 mb-3">الهدف</h3>
             <p className="text-gray-600 leading-relaxed mb-6">
-              يهدف فهيم إلى إحداث ثورة في الخدمات الحكومية عبر توفير مساعد ذكي يفهم الاحتياجات المعقدة ويقدم إجابات دقيقة.
+              يهدف فهيم إلى إحداث ثورة في الخدمات الحكومية عبر توفير مساعد ذكي
+              يفهم الاحتياجات المعقدة ويقدم إجابات دقيقة.
             </p>
-            
+
             <button
               onClick={onStartChallenge}
               className="px-8 py-4 bg-absher-green text-white rounded-xl text-lg font-bold shadow-lg hover:bg-absher-dark transition-all transform hover:scale-105"
@@ -157,8 +166,8 @@ const AboutFaheem = ({ onBack, onStartChallenge }) => {
             فريق التطوير
           </h2>
           <p className="text-lg text-gray-600 mb-6">
-            فهيم هو مشروع تجريبي تم تطويره بشغف لتحسين تجربة المستخدم في
-            الخدمات الحكومية الرقمية.
+            فهيم هو مشروع تجريبي تم تطويره بشغف لتحسين تجربة المستخدم في الخدمات
+            الحكومية الرقمية.
           </p>
           <div className="inline-block bg-gradient-to-r from-absher-green to-emerald-500 text-white px-8 py-4 rounded-xl shadow-lg">
             <p className="font-bold text-lg">نسخة تجريبية - Demo Version</p>
