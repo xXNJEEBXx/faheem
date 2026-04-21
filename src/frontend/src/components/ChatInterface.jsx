@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
 import FaheemAvatar from "./FaheemAvatar";
 
 const ChatInterface = ({ onBack }) => {
+  const [sessionToken, setSessionToken] = useState(null);
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -11,6 +13,31 @@ const ChatInterface = ({ onBack }) => {
     },
   ]);
   const [inputValue, setInputValue] = useState("");
+
+  useEffect(() => {
+    // Start backend conversation session
+    axios.post("/api/chat/start")
+      .then(res => {
+        if(res.data && res.data.session_token) {
+           setSessionToken(res.data.session_token);
+        }
+      })
+      .catch(err => console.error("Error starting chat:", err));
+  }, []);
+
+  const saveMessageToBackend = async (content, senderType) => {
+    if (!sessionToken) return;
+    try {
+      await axios.post("/api/chat/message", {
+        session_token: sessionToken,
+        message: content,
+        sender_type: senderType
+      });
+    } catch (error) {
+      console.error(`Error saving ${senderType} message:`, error);
+    }
+  };
+
   const [isTyping, setIsTyping] = useState(false);
   const [avatarState, setAvatarState] = useState("idle");
   const messagesEndRef = useRef(null);
@@ -27,16 +54,20 @@ const ChatInterface = ({ onBack }) => {
     e.preventDefault();
     if (!inputValue.trim()) return;
 
+    const userMsgText = inputValue;
     const userMessage = {
       id: messages.length + 1,
       sender: "user",
-      text: inputValue,
+      text: userMsgText,
       timestamp: new Date(),
     };
 
     setMessages((prev) => [...prev, userMessage]);
     setInputValue("");
-    processResponse(inputValue);
+    
+    await saveMessageToBackend(userMsgText, "user");
+    
+    processResponse(userMsgText);
   };
 
   const processResponse = (text) => {
@@ -102,6 +133,8 @@ const ChatInterface = ({ onBack }) => {
       setMessages((prev) => [...prev, botMessage]);
       setIsTyping(false);
       setAvatarState(nextAvatarState);
+      
+      saveMessageToBackend(responseText, "ai");
 
       // Reset avatar to idle after a while if it was winking
       if (nextAvatarState === "wink") {

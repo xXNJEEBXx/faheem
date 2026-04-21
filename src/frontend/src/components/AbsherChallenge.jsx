@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
 
 // Helper function to call Gemini API
 const callGeminiAPI = async (history, persona) => {
@@ -54,6 +55,7 @@ const callGeminiAPI = async (history, persona) => {
 };
 
 const AbsherChallenge = ({ onBack }) => {
+  const [sessionToken, setSessionToken] = useState(null);
   const [gameState, setGameState] = useState("disclaimer"); // disclaimer, lobby, searching, playing, verdict, result
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState("");
@@ -61,6 +63,19 @@ const AbsherChallenge = ({ onBack }) => {
   const [opponentType, setOpponentType] = useState(null); // 'faheem' or 'human'
   const messagesEndRef = useRef(null);
   const [verdict, setVerdict] = useState(null);
+
+  const saveMessageToBackend = async (content, senderType) => {
+    if (!sessionToken) return;
+    try {
+      await axios.post("/api/chat/message", {
+        session_token: sessionToken,
+        message: content,
+        sender_type: senderType
+      });
+    } catch (error) {
+      console.error(`Error saving ${senderType} message:`, error);
+    }
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -70,8 +85,19 @@ const AbsherChallenge = ({ onBack }) => {
     scrollToBottom();
   }, [messages, isTyping]);
 
-  const handleStartSearch = () => {
+  const handleStartSearch = async () => {
     setGameState("searching");
+    
+    // Start backend conversation session
+    try {
+      const res = await axios.post("/api/chat/start");
+      if(res.data && res.data.session_token) {
+         setSessionToken(res.data.session_token);
+      }
+    } catch(err) {
+      console.error("Error starting challenge chat:", err);
+    }
+
     setTimeout(() => {
       setGameState("playing");
       setOpponentType(Math.random() > 0.5 ? "faheem" : "human");
@@ -89,6 +115,9 @@ const AbsherChallenge = ({ onBack }) => {
     setInputValue("");
     setIsTyping(true);
 
+    // Save user message to DB
+    await saveMessageToBackend(userMsg, "user");
+
     // Call Gemini API (or simulation)
     const responseText = await callGeminiAPI(newMessages, opponentType);
 
@@ -97,11 +126,25 @@ const AbsherChallenge = ({ onBack }) => {
       { sender: "opponent", content: responseText },
     ]);
     setIsTyping(false);
+    
+    // Save AI response to DB
+    await saveMessageToBackend(responseText, "ai");
   };
 
-  const handleVerdict = (guess) => {
+  const handleVerdict = async (guess) => {
     setVerdict(guess);
     setGameState("result");
+    
+    if (sessionToken) {
+      try {
+        await axios.post("/api/chat/challenge", {
+          session_token: sessionToken,
+          user_guess: guess === 'faheem' ? 'ai' : 'human'
+        });
+      } catch (error) {
+        console.error("Error submitting challenge result:", error);
+      }
+    }
   };
 
   return (
