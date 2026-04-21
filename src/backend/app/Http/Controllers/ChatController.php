@@ -28,32 +28,26 @@ class ChatController extends Controller
     {
         $request->validate([
             'session_token' => 'required|string|exists:conversations,session_token',
-            'message' => 'required|string'
+            'message' => 'required|string',
+            'sender_type' => 'required|in:user,ai'
         ]);
 
         $conversation = Conversation::where('session_token', $request->input('session_token'))->firstOrFail();
 
-        // Save user message
-        $userMessage = Message::create([
+        if ($conversation->status === 'ended') {
+            return response()->json(['message' => 'Cannot send messages to an ended conversation.'], 403);
+        }
+
+        // Save message
+        $message = Message::create([
             'conversation_id' => $conversation->id,
-            'sender_type' => 'user',
+            'sender_type' => $request->input('sender_type'),
             'content' => $request->input('message')
         ]);
 
-        // Mock AI response for now
-        $aiResponseContent = 'This is a mock AI response from the Laravel Backend.';
-
-        // Save AI message
-        $aiMessage = Message::create([
-            'conversation_id' => $conversation->id,
-            'sender_type' => 'ai',
-            'content' => $aiResponseContent
-        ]);
-
         return response()->json([
-            'user_message' => $userMessage,
-            'ai_message' => $aiMessage,
-            'state' => 'idle'
+            'saved_message' => $message,
+            'state' => 'success'
         ]);
     }
 

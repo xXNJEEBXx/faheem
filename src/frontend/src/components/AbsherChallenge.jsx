@@ -33,7 +33,7 @@ const callGeminiAPI = async (history, persona) => {
             })),
           ],
         }),
-      }
+      },
     );
 
     const data = await response.json();
@@ -70,7 +70,7 @@ const AbsherChallenge = ({ onBack }) => {
       await axios.post("/api/chat/message", {
         session_token: sessionToken,
         message: content,
-        sender_type: senderType
+        sender_type: senderType,
       });
     } catch (error) {
       console.error(`Error saving ${senderType} message:`, error);
@@ -87,14 +87,14 @@ const AbsherChallenge = ({ onBack }) => {
 
   const handleStartSearch = async () => {
     setGameState("searching");
-    
+
     // Start backend conversation session
     try {
       const res = await axios.post("/api/chat/start");
-      if(res.data && res.data.session_token) {
-         setSessionToken(res.data.session_token);
+      if (res.data && res.data.session_token) {
+        setSessionToken(res.data.session_token);
       }
-    } catch(err) {
+    } catch (err) {
       console.error("Error starting challenge chat:", err);
     }
 
@@ -126,7 +126,7 @@ const AbsherChallenge = ({ onBack }) => {
       { sender: "opponent", content: responseText },
     ]);
     setIsTyping(false);
-    
+
     // Save AI response to DB
     await saveMessageToBackend(responseText, "ai");
   };
@@ -134,12 +134,12 @@ const AbsherChallenge = ({ onBack }) => {
   const handleVerdict = async (guess) => {
     setVerdict(guess);
     setGameState("result");
-    
+
     if (sessionToken) {
       try {
         await axios.post("/api/chat/challenge", {
           session_token: sessionToken,
-          user_guess: guess === 'faheem' ? 'ai' : 'human'
+          user_guess: guess === "faheem" ? "ai" : "human",
         });
       } catch (error) {
         console.error("Error submitting challenge result:", error);

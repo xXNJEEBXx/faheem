@@ -16,13 +16,14 @@ const ChatInterface = ({ onBack }) => {
 
   useEffect(() => {
     // Start backend conversation session
-    axios.post("/api/chat/start")
-      .then(res => {
-        if(res.data && res.data.session_token) {
-           setSessionToken(res.data.session_token);
+    axios
+      .post("/api/chat/start")
+      .then((res) => {
+        if (res.data && res.data.session_token) {
+          setSessionToken(res.data.session_token);
         }
       })
-      .catch(err => console.error("Error starting chat:", err));
+      .catch((err) => console.error("Error starting chat:", err));
   }, []);
 
   const saveMessageToBackend = async (content, senderType) => {
@@ -31,7 +32,7 @@ const ChatInterface = ({ onBack }) => {
       await axios.post("/api/chat/message", {
         session_token: sessionToken,
         message: content,
-        sender_type: senderType
+        sender_type: senderType,
       });
     } catch (error) {
       console.error(`Error saving ${senderType} message:`, error);
@@ -64,9 +65,9 @@ const ChatInterface = ({ onBack }) => {
 
     setMessages((prev) => [...prev, userMessage]);
     setInputValue("");
-    
+
     await saveMessageToBackend(userMsgText, "user");
-    
+
     processResponse(userMsgText);
   };
 
@@ -133,7 +134,7 @@ const ChatInterface = ({ onBack }) => {
       setMessages((prev) => [...prev, botMessage]);
       setIsTyping(false);
       setAvatarState(nextAvatarState);
-      
+
       saveMessageToBackend(responseText, "ai");
 
       // Reset avatar to idle after a while if it was winking
