@@ -8,4 +8,9 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::post('/chat', [ChatController::class, 'sendMessage']);
+Route::prefix('chat')->group(function () {
+    Route::post('/start', [ChatController::class, 'startConversation']);
+    Route::post('/message', [ChatController::class, 'sendMessage']);
+    Route::post('/challenge', [ChatController::class, 'submitChallengeResult']);
+    Route::get('/history', [ChatController::class, 'getConversationHistory']);
+});
