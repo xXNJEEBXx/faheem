@@ -32,7 +32,7 @@ const ChallengeResults = ({ onBack }) => {
           </svg>
           العودة
         </button>
-        <h1 className="text-2xl font-bold text-gray-800 mr-4">نتائج التحديات 📊</h1>
+        <h1 className="text-2xl font-bold text-gray-800 mr-4">الإحصائيات 📊</h1>
       </header>
 
       <main className="max-w-5xl mx-auto">

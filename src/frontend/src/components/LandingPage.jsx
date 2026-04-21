@@ -24,7 +24,7 @@ const LandingPage = ({ onStartChat, onStartChallenge, onAbout, onResults }) => {
             onClick={onResults} 
             className="text-sm text-gray-400 hover:text-gray-600 transition-colors"
           >
-            نتائج اللعب
+            الإحصائيات
           </button>
           <div className="text-sm text-gray-500">نسخة تجريبية (Demo)</div>
         </div>
