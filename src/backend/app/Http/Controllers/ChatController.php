@@ -55,13 +55,13 @@ class ChatController extends Controller
     {
         $request->validate([
             'session_token' => 'required|string|exists:conversations,session_token',
-            'user_guess' => 'required|in:ai,human'
+            'user_guess' => 'required|in:ai,human',
+            'actual_identity' => 'required|in:ai,human'
         ]);
 
         $conversation = Conversation::where('session_token', $request->input('session_token'))->firstOrFail();
 
-        // The actual identity is 'ai' for now according to the specification
-        $actualIdentity = 'ai';
+        $actualIdentity = $request->input('actual_identity');
         $isCorrect = ($request->input('user_guess') === $actualIdentity);
 
         $challengeSession = ChallengeSession::create([
