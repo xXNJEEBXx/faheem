@@ -142,7 +142,7 @@ const AbsherChallenge = ({ onBack }) => {
         await axios.post(`${API_BASE_URL}/chat/challenge`, {
           session_token: sessionToken,
           user_guess: guess === "faheem" ? "ai" : "human",
-          actual_identity: opponentType === "faheem" ? "ai" : "human"
+          actual_identity: opponentType === "faheem" ? "ai" : "human",
         });
       } catch (error) {
         console.error("Error submitting challenge result:", error);

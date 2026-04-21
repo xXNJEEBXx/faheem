@@ -3,9 +3,10 @@ import LandingPage from "./components/LandingPage";
 import ChatInterface from "./components/ChatInterface";
 import AbsherChallenge from "./components/AbsherChallenge";
 import AboutFaheem from "./components/AboutFaheem";
+import ChallengeResults from "./components/ChallengeResults";
 
 function App() {
-  const [currentView, setCurrentView] = useState("landing"); // landing, chat, challenge, about
+  const [currentView, setCurrentView] = useState("landing"); // landing, chat, challenge, about, results
 
   const renderView = () => {
     switch (currentView) {
@@ -20,12 +21,15 @@ function App() {
             onStartChallenge={() => setCurrentView("challenge")}
           />
         );
+      case "results":
+        return <ChallengeResults onBack={() => setCurrentView("landing")} />;
       default:
         return (
           <LandingPage
             onStartChat={() => setCurrentView("chat")}
             onStartChallenge={() => setCurrentView("challenge")}
             onAbout={() => setCurrentView("about")}
+            onResults={() => setCurrentView("results")}
           />
         );
     }

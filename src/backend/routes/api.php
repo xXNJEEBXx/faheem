@@ -13,4 +13,5 @@ Route::prefix('chat')->group(function () {
     Route::post('/message', [ChatController::class, 'sendMessage']);
     Route::post('/challenge', [ChatController::class, 'submitChallengeResult']);
     Route::get('/history', [ChatController::class, 'getConversationHistory']);
+    Route::get('/challenges', [ChatController::class, 'getAllChallenges']);
 });

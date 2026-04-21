@@ -93,4 +93,16 @@ class ChatController extends Controller
             'conversation' => $conversation
         ]);
     }
+
+    public function getAllChallenges()
+    {
+        // Get all completed challenges with their conversation messages
+        $challenges = ChallengeSession::with(['conversation.messages' => function ($query) {
+            $query->orderBy('created_at', 'asc');
+        }])->orderBy('created_at', 'desc')->get();
+
+        return response()->json([
+            'challenges' => $challenges
+        ]);
+    }
 }
