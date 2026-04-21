@@ -19,7 +19,15 @@ const LandingPage = ({ onStartChat, onStartChallenge, onAbout, onResults }) => {
         <div className="text-2xl font-bold text-absher-green">
           فهيم | Faheem
         </div>
-        <div className="text-sm text-gray-500">نسخة تجريبية (Demo)</div>
+        <div className="flex items-center gap-4">
+          <button 
+            onClick={onResults} 
+            className="text-sm text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            نتائج اللعب
+          </button>
+          <div className="text-sm text-gray-500">نسخة تجريبية (Demo)</div>
+        </div>
       </header>
 
       <main className="flex-grow flex items-center justify-center p-4 md:p-8">
@@ -51,15 +59,8 @@ const LandingPage = ({ onStartChat, onStartChallenge, onAbout, onResults }) => {
                 onClick={onStartChallenge}
                 className="px-8 py-4 bg-white text-absher-green border-2 border-absher-green rounded-xl text-lg font-bold shadow-lg hover:bg-gray-50 transition-all transform hover:scale-105 flex items-center justify-center gap-2"
               >
-                <span>طھطط¯ظٹ ط£ط¨ط´ط±</span>
+                <span>تحدي أبشر</span>
                 <span>🏆</span>
-              </button>
-              <button
-                onClick={onResults}
-                className="px-8 py-4 bg-yellow-50 text-yellow-700 border-2 border-yellow-400 rounded-xl text-lg font-bold hover:bg-yellow-100 transition-all transform hover:scale-105 flex items-center justify-center gap-2"
-              >
-                <span>نتائج اللعب</span>
-                <span>📊</span>
               </button>
               <button
                 onClick={onAbout}
