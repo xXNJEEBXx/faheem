@@ -54,6 +54,8 @@ const callGeminiAPI = async (history, persona) => {
   }
 };
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || "/api";
+
 const AbsherChallenge = ({ onBack }) => {
   const [sessionToken, setSessionToken] = useState(null);
   const [gameState, setGameState] = useState("disclaimer"); // disclaimer, lobby, searching, playing, verdict, result
@@ -67,7 +69,7 @@ const AbsherChallenge = ({ onBack }) => {
   const saveMessageToBackend = async (content, senderType) => {
     if (!sessionToken) return;
     try {
-      await axios.post("/api/chat/message", {
+      await axios.post(`${API_BASE_URL}/chat/message`, {
         session_token: sessionToken,
         message: content,
         sender_type: senderType,
@@ -90,7 +92,7 @@ const AbsherChallenge = ({ onBack }) => {
 
     // Start backend conversation session
     try {
-      const res = await axios.post("/api/chat/start");
+      const res = await axios.post(`${API_BASE_URL}/chat/start`);
       if (res.data && res.data.session_token) {
         setSessionToken(res.data.session_token);
       }
@@ -137,7 +139,7 @@ const AbsherChallenge = ({ onBack }) => {
 
     if (sessionToken) {
       try {
-        await axios.post("/api/chat/challenge", {
+        await axios.post(`${API_BASE_URL}/chat/challenge`, {
           session_token: sessionToken,
           user_guess: guess === "faheem" ? "ai" : "human",
         });

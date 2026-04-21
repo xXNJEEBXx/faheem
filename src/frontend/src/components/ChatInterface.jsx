@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import FaheemAvatar from "./FaheemAvatar";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || "/api";
+
 const ChatInterface = ({ onBack }) => {
   const [sessionToken, setSessionToken] = useState(null);
   const [messages, setMessages] = useState([
@@ -17,7 +19,7 @@ const ChatInterface = ({ onBack }) => {
   useEffect(() => {
     // Start backend conversation session
     axios
-      .post("/api/chat/start")
+      .post(`${API_BASE_URL}/chat/start`)
       .then((res) => {
         if (res.data && res.data.session_token) {
           setSessionToken(res.data.session_token);
@@ -29,7 +31,7 @@ const ChatInterface = ({ onBack }) => {
   const saveMessageToBackend = async (content, senderType) => {
     if (!sessionToken) return;
     try {
-      await axios.post("/api/chat/message", {
+      await axios.post(`${API_BASE_URL}/chat/message`, {
         session_token: sessionToken,
         message: content,
         sender_type: senderType,
