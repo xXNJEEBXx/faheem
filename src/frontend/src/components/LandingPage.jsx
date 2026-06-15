@@ -20,8 +20,8 @@ const LandingPage = ({ onStartChat, onStartChallenge, onAbout, onResults }) => {
           فهيم | Faheem
         </div>
         <div className="flex items-center gap-4">
-          <button 
-            onClick={onResults} 
+          <button
+            onClick={onResults}
             className="text-sm text-gray-400 hover:text-gray-600 transition-colors"
           >
             الإحصائيات
