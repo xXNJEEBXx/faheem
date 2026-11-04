@@ -7,10 +7,6 @@ const LandingPage = ({ onStartChat, onStartChallenge, onAbout, onResults }) => {
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
-    // التأكد أن البداية دائماً بيضاء (Light Mode) عند تحميل الصفحة
-    document.documentElement.classList.remove("dark");
-    setIsDark(false);
-
     const timer = setTimeout(() => {
       setAvatarState("idle");
     }, 2000);
@@ -18,9 +14,13 @@ const LandingPage = ({ onStartChat, onStartChallenge, onAbout, onResults }) => {
   }, []);
 
   const toggleDarkMode = () => {
-    const htmlEl = document.documentElement;
-    htmlEl.classList.toggle("dark");
-    setIsDark(htmlEl.classList.contains("dark"));
+    const newMode = !isDark;
+    setIsDark(newMode);
+    if (newMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
   };
 
   return (
