@@ -56,7 +56,7 @@ const callGeminiAPI = async (history, persona) => {
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "/api";
 
-const AbsherChallenge = ({ onBack }) => {
+const AbsherChallenge = ({ onBack, isDark, toggleDarkMode }) => {
   const [sessionToken, setSessionToken] = useState(null);
   const [gameState, setGameState] = useState("disclaimer"); // disclaimer, lobby, searching, playing, verdict, result
   const [messages, setMessages] = useState([]);
@@ -90,7 +90,6 @@ const AbsherChallenge = ({ onBack }) => {
   const handleStartSearch = async () => {
     setGameState("searching");
 
-    // Start backend conversation session
     try {
       const res = await axios.post(`${API_BASE_URL}/chat/start`);
       if (res.data && res.data.session_token) {
@@ -117,10 +116,8 @@ const AbsherChallenge = ({ onBack }) => {
     setInputValue("");
     setIsTyping(true);
 
-    // Save user message to DB
     await saveMessageToBackend(userMsg, "user");
 
-    // Call Gemini API (or simulation)
     const responseText = await callGeminiAPI(newMessages, opponentType);
 
     setMessages((prev) => [
@@ -129,7 +126,6 @@ const AbsherChallenge = ({ onBack }) => {
     ]);
     setIsTyping(false);
 
-    // Save AI response to DB
     await saveMessageToBackend(responseText, "ai");
   };
 
@@ -152,15 +148,21 @@ const AbsherChallenge = ({ onBack }) => {
 
   return (
     <div
-      className="flex flex-col h-screen bg-gray-50 text-gray-900 font-sans"
+      className={`flex flex-col h-screen font-sans transition-colors duration-300 ${
+        isDark ? "bg-gray-950 text-gray-100" : "bg-gray-50 text-gray-900"
+      }`}
       dir="rtl"
     >
       {/* Header */}
-      <header className="bg-white p-4 shadow-sm flex justify-between items-center border-b border-gray-200 z-10">
+      <header className={`p-4 shadow-sm flex justify-between items-center border-b z-10 transition-colors duration-300 ${
+        isDark ? "bg-gray-900 border-gray-800" : "bg-white border-gray-200"
+      }`}>
         <div className="flex items-center gap-4">
           <button
             onClick={onBack}
-            className="flex items-center gap-2 text-gray-500 hover:text-[#007C5A] transition-colors font-bold"
+            className={`flex items-center gap-2 transition-colors font-bold ${
+              isDark ? "text-gray-300 hover:text-emerald-400" : "text-gray-500 hover:text-[#007C5A]"
+            }`}
           >
             <svg
               className="w-6 h-6"
@@ -171,6 +173,7 @@ const AbsherChallenge = ({ onBack }) => {
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                strokeLinejoin="round"
                 strokeWidth="2"
                 d="M14 5l7 7m0 0l-7 7m7-7H3"
               ></path>
@@ -179,50 +182,71 @@ const AbsherChallenge = ({ onBack }) => {
           </button>
         </div>
 
-        <h2 className="text-xl font-bold text-[#007C5A] absolute left-1/2 transform -translate-x-1/2">
+        <h2 className={`text-xl font-bold absolute left-1/2 transform -translate-x-1/2 ${
+          isDark ? "text-emerald-400" : "text-[#007C5A]"
+        }`}>
           تحدي أبشر
         </h2>
 
-        {gameState === "playing" && (
+        <div className="flex items-center gap-3">
+          {/* Dark Mode Toggle Button */}
           <button
-            onClick={() => setGameState("verdict")}
-            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-bold transition-colors animate-pulse shadow-md"
+            onClick={toggleDarkMode}
+            className="p-2 rounded-xl bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-yellow-400 hover:scale-105 transition-all shadow-sm flex items-center justify-center text-lg"
+            title="تغيير الوضع المظلم"
           >
-            كشف الهوية
+            {isDark ? "☀️" : "🌙"}
           </button>
-        )}
+
+          {gameState === "playing" && (
+            <button
+              onClick={() => setGameState("verdict")}
+              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-bold transition-colors animate-pulse shadow-md"
+            >
+              كشف الهوية
+            </button>
+          )}
+        </div>
       </header>
 
       {/* Main Layout Container */}
       <div className="flex-1 flex overflow-hidden w-full">
         {/* Sidebar (Info Panel) */}
-        <aside className="hidden lg:flex flex-col w-72 bg-white border-l border-gray-200 overflow-y-auto p-4">
+        <aside className={`hidden lg:flex flex-col w-72 border-l overflow-y-auto p-4 transition-colors duration-300 ${
+          isDark ? "bg-gray-900 border-gray-800" : "bg-white border-gray-200"
+        }`}>
           <div className="space-y-6">
-            <div className="bg-[#007C5A]/5 p-4 rounded-xl border border-[#007C5A]/10">
-              <h3 className="text-lg font-bold text-[#007C5A] mb-2">
+            <div className={`p-4 rounded-xl border ${
+              isDark ? "bg-emerald-950/30 border-emerald-800/40" : "bg-[#007C5A]/5 border-[#007C5A]/10"
+            }`}>
+              <h3 className={`text-lg font-bold mb-2 ${isDark ? "text-emerald-400" : "text-[#007C5A]"}`}>
                 ما هو تحدي أبشر؟
               </h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
+              <p className={`text-sm leading-relaxed ${isDark ? "text-gray-300" : "text-gray-600"}`}>
                 هو بيئة اختبار صُممت بهدف تطوير قدرات فهيم على محاكاة الحوار
                 البشري. من خلال تفاعلك معه ومحاولتك كشف هويته، تساهم في تدريبه
                 ليصبح أكثر ذكاءً وطبيعية في خدمة المستفيدين.
               </p>
             </div>
 
-            <div className="bg-blue-50 p-4 rounded-xl border border-blue-100">
-              <h3 className="text-lg font-bold text-blue-800 mb-2">
+            <div className={`p-4 rounded-xl border ${
+              isDark ? "bg-blue-950/30 border-blue-800/40" : "bg-blue-50 border-blue-100"
+            }`}>
+              <h3 className={`text-lg font-bold mb-2 ${isDark ? "text-blue-400" : "text-blue-800"}`}>
                 كيف يتطور فهيم؟
               </h3>
-              <p className="text-blue-700 text-sm leading-relaxed">
+              <p className={`text-sm leading-relaxed ${isDark ? "text-blue-200" : "text-blue-700"}`}>
                 يتعلم فهيم من كل محادثة يجريها معك! باستخدام تقنيات التعلم
                 المعزز (RLHF)، يقوم بتحليل أسلوبك في الكلام، والردود التي خدعتك
                 أو كشفت هويته.
               </p>
             </div>
 
-            <div className="bg-gray-50 p-4 rounded-xl border border-gray-200">
-              <h3 className="text-lg font-bold text-gray-800 mb-2">الهدف</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
+            <div className={`p-4 rounded-xl border ${
+              isDark ? "bg-gray-800/50 border-gray-700" : "bg-gray-50 border-gray-200"
+            }`}>
+              <h3 className={`text-lg font-bold mb-2 ${isDark ? "text-gray-200" : "text-gray-800"}`}>الهدف</h3>
+              <p className={`text-sm leading-relaxed ${isDark ? "text-gray-300" : "text-gray-600"}`}>
                 يهدف فهيم إلى إحداث ثورة في الخدمات الحكومية عبر توفير مساعد ذكي
                 يفهم الاحتياجات المعقدة ويقدم إجابات دقيقة.
               </p>
@@ -231,18 +255,22 @@ const AbsherChallenge = ({ onBack }) => {
         </aside>
 
         {/* Game Area */}
-        <main className="flex-1 relative flex flex-col bg-gray-50 overflow-hidden">
+        <main className={`flex-1 relative flex flex-col overflow-hidden transition-colors duration-300 ${
+          isDark ? "bg-gray-950" : "bg-gray-50"
+        }`}>
           {/* Disclaimer Screen */}
           {gameState === "disclaimer" && (
-            <div className="absolute inset-0 flex items-center justify-center bg-white z-50 p-8">
+            <div className={`absolute inset-0 flex items-center justify-center z-50 p-8 transition-colors duration-300 ${
+              isDark ? "bg-gray-900" : "bg-white"
+            }`}>
               <div className="max-w-2xl w-full text-center space-y-8">
-                <div className="w-24 h-24 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <div className="w-24 h-24 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
                   <span className="text-5xl">⚠️</span>
                 </div>
-                <h3 className="text-3xl font-bold text-gray-900">
+                <h3 className={`text-3xl font-bold ${isDark ? "text-white" : "text-gray-900"}`}>
                   تنويه هام قبل البدء
                 </h3>
-                <p className="text-gray-600 text-xl leading-relaxed max-w-lg mx-auto">
+                <p className={`text-xl leading-relaxed max-w-lg mx-auto ${isDark ? "text-gray-300" : "text-gray-600"}`}>
                   هذا المشروع تجريبي للعرض فقط لإيصال الفكرة. <br />
                   لا يوجد بحث عن منافسين حقيقين في هذا الديمو.
                 </p>
@@ -258,22 +286,26 @@ const AbsherChallenge = ({ onBack }) => {
 
           {/* Lobby Screen */}
           {gameState === "lobby" && (
-            <div className="flex-1 flex flex-col items-center justify-center p-8 space-y-10 animate-fade-in bg-gradient-to-b from-white to-gray-50">
+            <div className={`flex-1 flex flex-col items-center justify-center p-8 space-y-10 animate-fade-in transition-colors duration-300 ${
+              isDark ? "bg-gradient-to-b from-gray-900 to-gray-950" : "bg-gradient-to-b from-white to-gray-50"
+            }`}>
               <div
                 className="relative group cursor-pointer"
                 onClick={handleStartSearch}
               >
                 <div className="absolute -inset-1 bg-gradient-to-r from-[#007C5A] to-blue-600 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-                <div className="relative w-48 h-48 bg-white rounded-full flex items-center justify-center shadow-xl border-4 border-white">
+                <div className={`relative w-48 h-48 rounded-full flex items-center justify-center shadow-xl border-4 ${
+                  isDark ? "bg-gray-800 border-gray-700" : "bg-white border-white"
+                }`}>
                   <span className="text-8xl">🛡️</span>
                 </div>
               </div>
 
               <div className="text-center space-y-4 max-w-md">
-                <h1 className="text-4xl font-bold text-gray-900">
+                <h1 className={`text-4xl font-bold ${isDark ? "text-white" : "text-gray-900"}`}>
                   ساحة الاختبار
                 </h1>
-                <p className="text-gray-500 text-lg">
+                <p className={`text-lg ${isDark ? "text-gray-400" : "text-gray-500"}`}>
                   هل يمكنك التمييز بين البشر والذكاء الاصطناعي؟ اضغط للبحث عن
                   خصم.
                 </p>
@@ -290,9 +322,13 @@ const AbsherChallenge = ({ onBack }) => {
 
           {/* Searching Screen */}
           {gameState === "searching" && (
-            <div className="flex-1 flex flex-col items-center justify-center space-y-8 bg-white">
+            <div className={`flex-1 flex flex-col items-center justify-center space-y-8 transition-colors duration-300 ${
+              isDark ? "bg-gray-900" : "bg-white"
+            }`}>
               <div className="relative">
-                <div className="w-32 h-32 border-4 border-gray-100 rounded-full"></div>
+                <div className={`w-32 h-32 border-4 rounded-full ${
+                  isDark ? "border-gray-800" : "border-gray-100"
+                }`}></div>
                 <div className="w-32 h-32 border-4 border-[#007C5A] border-t-transparent rounded-full animate-spin absolute top-0 left-0"></div>
                 <div className="absolute inset-0 flex items-center justify-center">
                   <span className="text-4xl animate-pulse">🔍</span>
@@ -302,7 +338,7 @@ const AbsherChallenge = ({ onBack }) => {
                 <div className="text-2xl font-bold text-[#007C5A]">
                   جاري البحث عن خصم...
                 </div>
-                <div className="text-gray-400">
+                <div className={isDark ? "text-gray-500" : "text-gray-400"}>
                   يتم التوصيل بخوادم المحاكاة الآمنة
                 </div>
               </div>
@@ -313,7 +349,9 @@ const AbsherChallenge = ({ onBack }) => {
           {(gameState === "playing" ||
             gameState === "verdict" ||
             gameState === "result") && (
-            <div className="flex-1 flex flex-col h-full bg-[#F3F4F6]">
+            <div className={`flex-1 flex flex-col h-full transition-colors duration-300 ${
+              isDark ? "bg-gray-950" : "bg-[#F3F4F6]"
+            }`}>
               <div className="flex-1 overflow-y-auto p-6 space-y-6">
                 {messages.map((msg, index) => (
                   <div
@@ -326,6 +364,8 @@ const AbsherChallenge = ({ onBack }) => {
                       className={`max-w-[75%] p-4 rounded-2xl text-lg shadow-sm leading-relaxed ${
                         msg.sender === "user"
                           ? "bg-[#007C5A] text-white rounded-br-none"
+                          : isDark
+                          ? "bg-gray-800 text-gray-100 border border-gray-700 rounded-bl-none"
                           : "bg-white text-gray-800 border border-gray-200 rounded-bl-none"
                       }`}
                     >
@@ -335,7 +375,9 @@ const AbsherChallenge = ({ onBack }) => {
                 ))}
                 {isTyping && (
                   <div className="flex justify-end">
-                    <div className="bg-white p-4 rounded-2xl rounded-bl-none shadow-sm border border-gray-200 flex gap-2 items-center">
+                    <div className={`p-4 rounded-2xl rounded-bl-none shadow-sm border flex gap-2 items-center ${
+                      isDark ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
+                    }`}>
                       <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></span>
                       <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100"></span>
                       <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-200"></span>
@@ -347,14 +389,20 @@ const AbsherChallenge = ({ onBack }) => {
 
               <form
                 onSubmit={handleSendMessage}
-                className="bg-white p-4 border-t border-gray-200 flex gap-4 items-center"
+                className={`p-4 border-t flex gap-4 items-center transition-colors duration-300 ${
+                  isDark ? "bg-gray-900 border-gray-800" : "bg-white border-gray-200"
+                }`}
               >
                 <input
                   type="text"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   placeholder="اكتب رسالتك هنا..."
-                  className="flex-1 bg-gray-50 text-gray-900 border border-gray-200 rounded-xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-[#007C5A]/50 focus:border-[#007C5A] text-lg transition-all"
+                  className={`flex-1 border rounded-xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-[#007C5A]/50 focus:border-[#007C5A] text-lg transition-all ${
+                    isDark
+                      ? "bg-gray-800 text-gray-100 border-gray-700 placeholder-gray-500"
+                      : "bg-gray-50 text-gray-900 border-gray-200"
+                  }`}
                   disabled={gameState !== "playing"}
                 />
                 <button
@@ -382,36 +430,48 @@ const AbsherChallenge = ({ onBack }) => {
 
           {/* Verdict Modal */}
           {gameState === "verdict" && (
-            <div className="absolute inset-0 bg-white/80 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fade-in">
-              <div className="bg-white rounded-3xl p-10 max-w-lg w-full shadow-2xl border border-gray-100 text-center space-y-8">
-                <h2 className="text-4xl font-bold text-gray-900">
+            <div className={`absolute inset-0 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fade-in ${
+              isDark ? "bg-gray-950/80" : "bg-white/80"
+            }`}>
+              <div className={`rounded-3xl p-10 max-w-lg w-full shadow-2xl border text-center space-y-8 ${
+                isDark ? "bg-gray-900 border-gray-800 text-white" : "bg-white border-gray-100 text-gray-900"
+              }`}>
+                <h2 className="text-4xl font-bold">
                   من تتحدث معه؟
                 </h2>
-                <p className="text-gray-500 text-lg">
+                <p className={isDark ? "text-gray-400 text-lg" : "text-gray-500 text-lg"}>
                   حان وقت الحقيقة.. هل استطاع خداعك؟
                 </p>
 
                 <div className="grid grid-cols-2 gap-6">
                   <button
                     onClick={() => handleVerdict("human")}
-                    className="group relative bg-blue-50 hover:bg-blue-600 border-2 border-blue-100 hover:border-blue-600 p-8 rounded-2xl transition-all duration-300"
+                    className={`group relative border-2 p-8 rounded-2xl transition-all duration-300 ${
+                      isDark
+                        ? "bg-blue-950/30 hover:bg-blue-600 border-blue-900/50 hover:border-blue-600"
+                        : "bg-blue-50 hover:bg-blue-600 border-blue-100 hover:border-blue-600"
+                    }`}
                   >
                     <div className="text-6xl mb-4 group-hover:scale-110 transition-transform">
                       👤
                     </div>
-                    <div className="text-2xl font-bold text-blue-600 group-hover:text-white">
+                    <div className={`text-2xl font-bold ${isDark ? "text-blue-400 group-hover:text-white" : "text-blue-600 group-hover:text-white"}`}>
                       إنسان
                     </div>
                   </button>
 
                   <button
                     onClick={() => handleVerdict("faheem")}
-                    className="group relative bg-green-50 hover:bg-[#007C5A] border-2 border-green-100 hover:border-[#007C5A] p-8 rounded-2xl transition-all duration-300"
+                    className={`group relative border-2 p-8 rounded-2xl transition-all duration-300 ${
+                      isDark
+                        ? "bg-emerald-950/30 hover:bg-[#007C5A] border-emerald-900/50 hover:border-[#007C5A]"
+                        : "bg-green-50 hover:bg-[#007C5A] border-green-100 hover:border-[#007C5A]"
+                    }`}
                   >
                     <div className="text-6xl mb-4 group-hover:scale-110 transition-transform">
                       🤖
                     </div>
-                    <div className="text-2xl font-bold text-[#007C5A] group-hover:text-white">
+                    <div className={`text-2xl font-bold ${isDark ? "text-emerald-400 group-hover:text-white" : "text-[#007C5A] group-hover:text-white"}`}>
                       فهيم
                     </div>
                   </button>
@@ -419,7 +479,9 @@ const AbsherChallenge = ({ onBack }) => {
 
                 <button
                   onClick={() => setGameState("playing")}
-                  className="text-gray-400 hover:text-gray-600 font-medium transition-colors"
+                  className={`font-medium transition-colors ${
+                    isDark ? "text-gray-400 hover:text-gray-200" : "text-gray-400 hover:text-gray-600"
+                  }`}
                 >
                   العودة للمحادثة
                 </button>
@@ -429,7 +491,9 @@ const AbsherChallenge = ({ onBack }) => {
 
           {/* Result Modal */}
           {gameState === "result" && (
-            <div className="absolute inset-0 bg-white z-50 flex flex-col items-center justify-center p-8 animate-fade-in">
+            <div className={`absolute inset-0 z-50 flex flex-col items-center justify-center p-8 animate-fade-in transition-colors duration-300 ${
+              isDark ? "bg-gray-900" : "bg-white"
+            }`}>
               <div className="max-w-2xl w-full text-center space-y-10">
                 <div className="relative inline-block">
                   <div
@@ -453,12 +517,12 @@ const AbsherChallenge = ({ onBack }) => {
                   >
                     {verdict === opponentType ? "إجابة صحيحة!" : "للأسف، خدعك!"}
                   </h2>
-                  <p className="text-2xl text-gray-500">
+                  <p className={`text-2xl ${isDark ? "text-gray-300" : "text-gray-500"}`}>
                     لقد كنت تتحدث مع{" "}
                     <span
                       className={`font-bold ${
                         opponentType === "human"
-                          ? "text-blue-600"
+                          ? "text-blue-600 dark:text-blue-400"
                           : "text-[#007C5A]"
                       }`}
                     >
