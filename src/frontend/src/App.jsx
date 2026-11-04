@@ -7,7 +7,9 @@ import ChallengerResults from "./components/ChallengerResults";
 
 function App() {
   const [currentView, setCurrentView] = useState("landing"); // landing, chat, challenge, about, results
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(() => {
+  return localStorage.getItem("theme") === "dark";
+});
 
   // مزامنة دقيقة لحالة الدارك مود من الـ DOM و localStorage فور تحميل التطبيق
   useEffect(() => {
