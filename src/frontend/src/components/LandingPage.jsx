@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import FaheemAvatar from "./FaheemAvatar";
 import LiveChatDemo from "./LiveChatDemo";
 
-const LandingPage = ({ onStartChat, onStartChallenge, onAbout, onResults }) => {
+const LandingPage = ({ onStartChat, onStartChallenge, onAbout, onResults, isDark, toggleDarkMode }) => {
   const [avatarState, setAvatarState] = useState("wink");
-  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -12,16 +11,6 @@ const LandingPage = ({ onStartChat, onStartChallenge, onAbout, onResults }) => {
     }, 2000);
     return () => clearTimeout(timer);
   }, []);
-
-  const toggleDarkMode = () => {
-    const newMode = !isDark;
-    setIsDark(newMode);
-    if (newMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  };
 
   return (
     <div className={`min-h-screen overflow-x-hidden flex flex-col transition-colors duration-300 ${isDark ? 'bg-gray-900 text-gray-100' : 'bg-gradient-to-b from-absher-light to-white text-gray-900'}`}>
