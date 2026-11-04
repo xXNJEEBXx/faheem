@@ -69,8 +69,20 @@ function App() {
   };
 
   return (
-    <div className={`font-sans antialiased min-h-screen transition-colors duration-300 ${isDark ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-900'}`}>
+    <div className={`font-sans antialiased min-h-screen relative transition-colors duration-300 ${isDark ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-900'}`}>
+      
+      {/* زر الوضع الداكن الثابت في كل الصفحات */}
+      <button
+        onClick={toggleDarkMode}
+        className="fixed bottom-6 left-6 z-50 p-3 rounded-full bg-white dark:bg-gray-800 text-gray-800 dark:text-yellow-400 shadow-xl border border-gray-200 dark:border-gray-700 hover:scale-110 transition-all cursor-pointer flex items-center justify-center text-xl"
+        title="تغيير الوضع المظلم"
+      >
+        {isDark ? "☀️" : "🌙"}
+      </button>
+
+      {/* عرض الصفحة الحالية */}
       {renderView()}
+
     </div>
   );
 }
