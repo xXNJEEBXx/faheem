@@ -6,16 +6,15 @@ import AboutFaheem from "./components/AboutFaheem";
 import ChallengerResults from "./components/ChallengerResults";
 
 function App() {
-  const [currentView, setCurrentView] = useState("landing"); // landing, chat, challenge, about, results
+  const [currentView, setCurrentView] = useState("landing");
   const [isDark, setIsDark] = useState(() => {
-  return localStorage.getItem("theme") === "dark";
-});
+    return localStorage.getItem("theme") === "dark";
+  });
 
-  // مزامنة دقيقة لحالة الدارك مود من الـ DOM و localStorage فور تحميل التطبيق
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
     const isDarkModeActive = savedTheme === "dark" || document.documentElement.classList.contains("dark");
-    
+
     if (isDarkModeActive) {
       document.documentElement.classList.add("dark");
       setIsDark(true);
@@ -28,8 +27,6 @@ function App() {
   const toggleDarkMode = () => {
     const newMode = !isDark;
     setIsDark(newMode);
-    
-    // هذا السطر هو اللي يجبر كل صفحات الموقع تتغير تلقائياً بدون ما تعدل صفحة التحدي
     if (newMode) {
       document.documentElement.classList.add("dark");
       localStorage.setItem("theme", "dark");
@@ -44,7 +41,7 @@ function App() {
       case "chat":
         return <ChatInterface onBack={() => setCurrentView("landing")} isDark={isDark} toggleDarkMode={toggleDarkMode} />;
       case "challenge":
-  return <AbsherChallenge onBack={() => setCurrentView("landing")} isDark={isDark} toggleDarkMode={toggleDarkMode} />;
+        return <AbsherChallenge onBack={() => setCurrentView("landing")} isDark={isDark} toggleDarkMode={toggleDarkMode} />;
       case "about":
         return (
           <AboutFaheem
@@ -72,8 +69,6 @@ function App() {
 
   return (
     <div className={`font-sans antialiased min-h-screen relative transition-colors duration-300 ${isDark ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-900'}`}>
-      
-      {/* زر الوضع الداكن الثابت في كل الصفحات */}
       <button
         onClick={toggleDarkMode}
         className="fixed bottom-6 left-6 z-50 p-3 rounded-full bg-white dark:bg-gray-800 text-gray-800 dark:text-yellow-400 shadow-xl border border-gray-200 dark:border-gray-700 hover:scale-110 transition-all cursor-pointer flex items-center justify-center text-xl"
@@ -81,10 +76,7 @@ function App() {
       >
         {isDark ? "☀️" : "🌙"}
       </button>
-
-      {/* عرض الصفحة الحالية */}
       {renderView()}
-
     </div>
   );
 }
