@@ -28,6 +28,8 @@ function App() {
   const toggleDarkMode = () => {
     const newMode = !isDark;
     setIsDark(newMode);
+    
+    // هذا السطر هو اللي يجبر كل صفحات الموقع تتغير تلقائياً بدون ما تعدل صفحة التحدي
     if (newMode) {
       document.documentElement.classList.add("dark");
       localStorage.setItem("theme", "dark");
