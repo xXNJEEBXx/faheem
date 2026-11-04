@@ -14,10 +14,11 @@ const LandingPage = ({ onStartChat, onStartChallenge, onAbout, onResults }) => {
     return () => clearTimeout(timer);
   }, []);
 
-  // دالة تبديل الوضع الداكن
+  // دالة تبديل الوضع الداكن المحدثة لضمان التزامن السليم
   const toggleDarkMode = () => {
-    setIsDark(!isDark);
-    document.documentElement.classList.toggle("dark");
+    const htmlEl = document.documentElement;
+    htmlEl.classList.toggle("dark");
+    setIsDark(htmlEl.classList.contains("dark"));
   };
 
   return (
