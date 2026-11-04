@@ -7,11 +7,10 @@ const LandingPage = ({ onStartChat, onStartChallenge, onAbout, onResults }) => {
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
-    // التحقق من حالة الدارك مود الحقيقية في المتصفح أول ما يفتح الموقع
-    const isDarkModeActive = document.documentElement.classList.contains("dark");
-    setIsDark(isDarkModeActive);
+    // التأكد أن البداية دائماً بيضاء (Light Mode) عند تحميل الصفحة
+    document.documentElement.classList.remove("dark");
+    setIsDark(false);
 
-    // Initial wink then switch to idle
     const timer = setTimeout(() => {
       setAvatarState("idle");
     }, 2000);
@@ -21,8 +20,7 @@ const LandingPage = ({ onStartChat, onStartChallenge, onAbout, onResults }) => {
   const toggleDarkMode = () => {
     const htmlEl = document.documentElement;
     htmlEl.classList.toggle("dark");
-    const isActive = htmlEl.classList.contains("dark");
-    setIsDark(isActive);
+    setIsDark(htmlEl.classList.contains("dark"));
   };
 
   return (
