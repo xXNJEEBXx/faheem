@@ -38,7 +38,7 @@ function App() {
       case "chat":
         return <ChatInterface onBack={() => setCurrentView("landing")} isDark={isDark} toggleDarkMode={toggleDarkMode} />;
       case "challenge":
-        return <AbsherChallenge onBack={() => setCurrentView("landing")} isDark={isDark} toggleDarkMode={toggleDarkMode} />;
+  return <AbsherChallenge onBack={() => setCurrentView("landing")} isDark={isDark} toggleDarkMode={toggleDarkMode} />;
       case "about":
         return (
           <AboutFaheem
