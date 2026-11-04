@@ -9,10 +9,12 @@ function App() {
   const [currentView, setCurrentView] = useState("landing"); // landing, chat, challenge, about, results
   const [isDark, setIsDark] = useState(false);
 
-  // مزامنة حالة الدارك مود مع الـ DOM و localStorage
+  // مزامنة دقيقة لحالة الدارك مود من الـ DOM و localStorage فور تحميل التطبيق
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
+    const isDarkModeActive = savedTheme === "dark" || document.documentElement.classList.contains("dark");
+    
+    if (isDarkModeActive) {
       document.documentElement.classList.add("dark");
       setIsDark(true);
     } else {
