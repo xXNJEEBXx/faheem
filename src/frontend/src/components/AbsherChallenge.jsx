@@ -188,11 +188,13 @@ const AbsherChallenge = ({ onBack, isDark, toggleDarkMode }) => {
         </h2>
 
         <div className="flex items-center gap-3">
-          {/* زر تبديل الوضع الداكن */}
+          {/* زر تبديل الوضع الداكن المباشر */}
           {toggleDarkMode && (
             <button
               onClick={toggleDarkMode}
-              className="p-2 rounded-xl bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-yellow-400 hover:scale-105 transition-all shadow-sm flex items-center justify-center text-lg"
+              className={`px-3 py-2 rounded-xl text-lg font-bold shadow-sm transition-all flex items-center justify-center ${
+                isDark ? "bg-gray-800 text-yellow-400" : "bg-gray-200 text-gray-700"
+              }`}
               title="تغيير الوضع المظلم"
             >
               {isDark ? "☀️" : "🌙"}
