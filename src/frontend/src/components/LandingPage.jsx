@@ -4,6 +4,7 @@ import LiveChatDemo from "./LiveChatDemo";
 
 const LandingPage = ({ onStartChat, onStartChallenge, onAbout, onResults }) => {
   const [avatarState, setAvatarState] = useState("wink");
+  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
     // Initial wink then switch to idle
@@ -13,20 +14,35 @@ const LandingPage = ({ onStartChat, onStartChallenge, onAbout, onResults }) => {
     return () => clearTimeout(timer);
   }, []);
 
+  // دالة تبديل الوضع الداكن
+  const toggleDarkMode = () => {
+    setIsDark(!isDark);
+    document.documentElement.classList.toggle("dark");
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-absher-light to-white overflow-x-hidden flex flex-col">
+    <div className="min-h-screen bg-gradient-to-b from-absher-light to-white dark:from-gray-950 dark:to-gray-900 dark:text-gray-100 overflow-x-hidden flex flex-col transition-colors duration-300">
       <header className="w-full p-6 flex justify-between items-center z-20">
-        <div className="text-2xl font-bold text-absher-green">
+        <div className="text-2xl font-bold text-absher-green dark:text-emerald-400">
           فهيم | Faheem
         </div>
         <div className="flex items-center gap-4">
+          {/* زر تبديل الدارك مود */}
+          <button
+            onClick={toggleDarkMode}
+            className="p-2 rounded-xl bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-yellow-400 hover:scale-105 transition-all shadow-sm flex items-center justify-center text-lg"
+            title="تغيير الوضع المظلم"
+          >
+            {isDark ? "☀️" : "🌙"}
+          </button>
+          
           <button
             onClick={onResults}
-            className="text-sm text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-sm text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white transition-colors"
           >
             الإحصائيات
           </button>
-          <div className="text-sm text-gray-500">نسخة تجريبية (Demo)</div>
+          <div className="text-sm text-gray-500 dark:text-gray-400">نسخة تجريبية (Demo)</div>
         </div>
       </header>
 
@@ -45,10 +61,10 @@ const LandingPage = ({ onStartChat, onStartChallenge, onAbout, onResults }) => {
             </div>
 
             <div className="space-y-4">
-              <h1 className="text-4xl md:text-6xl font-bold text-gray-800">
-                هلا، أنا <span className="text-absher-green">فهيم</span>
+              <h1 className="text-4xl md:text-6xl font-bold text-gray-800 dark:text-white">
+                هلا، أنا <span className="text-absher-green dark:text-emerald-400">فهيم</span>
               </h1>
-              <p className="text-xl text-gray-600 leading-relaxed">
+              <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
                 مساعدك الذكي الجديد في أبشر. <br />
                 أفهمك، وأخدمك بروح إنسانية، وبدون تعقيد.
               </p>
@@ -57,14 +73,14 @@ const LandingPage = ({ onStartChat, onStartChallenge, onAbout, onResults }) => {
             <div className="flex flex-col sm:flex-row flex-wrap gap-4 w-full justify-center md:justify-start mt-8">
               <button
                 onClick={onStartChallenge}
-                className="px-8 py-4 bg-white text-absher-green border-2 border-absher-green rounded-xl text-lg font-bold shadow-lg hover:bg-gray-50 transition-all transform hover:scale-105 flex items-center justify-center gap-2"
+                className="px-8 py-4 bg-white dark:bg-gray-800 text-absher-green dark:text-emerald-400 border-2 border-absher-green dark:border-emerald-500 rounded-xl text-lg font-bold shadow-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-all transform hover:scale-105 flex items-center justify-center gap-2"
               >
                 <span>تحدي أبشر</span>
                 <span>🏆</span>
               </button>
               <button
                 onClick={onAbout}
-                className="px-8 py-4 bg-absher-green/10 text-absher-green border-2 border-transparent rounded-xl text-lg font-bold hover:bg-absher-green/20 transition-all transform hover:scale-105 flex items-center justify-center gap-2"
+                className="px-8 py-4 bg-absher-green/10 dark:bg-emerald-950/40 text-absher-green dark:text-emerald-400 border-2 border-transparent rounded-xl text-lg font-bold hover:bg-absher-green/20 dark:hover:bg-emerald-900/55 transition-all transform hover:scale-105 flex items-center justify-center gap-2"
               >
                 <span>عن فهيم</span>
               </button>
@@ -82,7 +98,7 @@ const LandingPage = ({ onStartChat, onStartChallenge, onAbout, onResults }) => {
         </div>
       </main>
 
-      <footer className="w-full text-center py-4 text-gray-400 text-xs mt-auto">
+      <footer className="w-full text-center py-4 text-gray-400 dark:text-gray-500 text-xs mt-auto">
         تطوير فريق فهيم © 2025
       </footer>
     </div>
