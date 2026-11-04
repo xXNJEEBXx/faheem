@@ -173,7 +173,6 @@ const AbsherChallenge = ({ onBack, isDark, toggleDarkMode }) => {
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeLinejoin="round"
                 strokeWidth="2"
                 d="M14 5l7 7m0 0l-7 7m7-7H3"
               ></path>
@@ -189,14 +188,16 @@ const AbsherChallenge = ({ onBack, isDark, toggleDarkMode }) => {
         </h2>
 
         <div className="flex items-center gap-3">
-          {/* Dark Mode Toggle Button */}
-          <button
-            onClick={toggleDarkMode}
-            className="p-2 rounded-xl bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-yellow-400 hover:scale-105 transition-all shadow-sm flex items-center justify-center text-lg"
-            title="تغيير الوضع المظلم"
-          >
-            {isDark ? "☀️" : "🌙"}
-          </button>
+          {/* زر تبديل الوضع الداكن */}
+          {toggleDarkMode && (
+            <button
+              onClick={toggleDarkMode}
+              className="p-2 rounded-xl bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-yellow-400 hover:scale-105 transition-all shadow-sm flex items-center justify-center text-lg"
+              title="تغيير الوضع المظلم"
+            >
+              {isDark ? "☀️" : "🌙"}
+            </button>
+          )}
 
           {gameState === "playing" && (
             <button
