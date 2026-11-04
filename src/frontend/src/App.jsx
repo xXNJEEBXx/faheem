@@ -36,7 +36,7 @@ function App() {
   };
 
   return (
-    <div className="font-sans antialiased text-gray-900 bg-gray-50 min-h-screen">
+    <div className="font-sans antialiased text-gray-900 bg-gray-50 dark:bg-gray-900 dark:text-gray-100 min-h-screen transition-colors duration-300">
       {renderView()}
     </div>
   );
