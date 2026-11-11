@@ -128,6 +128,42 @@ class AdminAccessTest extends TestCase
             ->assertJsonPath('challenges.0.conversation.messages.0.content', 'Test message');
     }
 
+    public function test_admin_can_delete_individual_and_all_challenge_conversations(): void
+    {
+        $conversation1 = Conversation::create(['session_token' => (string) Str::uuid(), 'status' => 'ended']);
+        Message::create(['conversation_id' => $conversation1->id, 'sender_type' => 'user', 'content' => 'Message 1']);
+        $challenge1 = ChallengeSession::create([
+            'conversation_id' => $conversation1->id, 'user_guess' => 'ai', 'actual_identity' => 'ai', 'is_correct' => true,
+        ]);
+
+        $conversation2 = Conversation::create(['session_token' => (string) Str::uuid(), 'status' => 'ended']);
+        Message::create(['conversation_id' => $conversation2->id, 'sender_type' => 'user', 'content' => 'Message 2']);
+        $challenge2 = ChallengeSession::create([
+            'conversation_id' => $conversation2->id, 'user_guess' => 'human', 'actual_identity' => 'human', 'is_correct' => true,
+        ]);
+
+        $adminToken = $this->admin()->createToken('test')->plainTextToken;
+
+        // Guest cannot delete
+        $this->deleteJson('/api/chat/challenges/'.$challenge1->id)->assertUnauthorized();
+        $this->deleteJson('/api/chat/challenges')->assertUnauthorized();
+
+        // Admin deletes challenge1
+        $this->withToken($adminToken)->deleteJson('/api/chat/challenges/'.$challenge1->id)->assertOk();
+        $this->assertDatabaseMissing('challenge_sessions', ['id' => $challenge1->id]);
+        $this->assertDatabaseMissing('conversations', ['id' => $conversation1->id]);
+        $this->assertDatabaseMissing('messages', ['content' => 'Message 1']);
+
+        // Challenge2 still exists
+        $this->assertDatabaseHas('challenge_sessions', ['id' => $challenge2->id]);
+
+        // Admin deletes all
+        $this->withToken($adminToken)->deleteJson('/api/chat/challenges')->assertOk();
+        $this->assertDatabaseCount('challenge_sessions', 0);
+        $this->assertDatabaseCount('conversations', 0);
+        $this->assertDatabaseCount('messages', 0);
+    }
+
     public function test_public_conversation_creation_is_still_available(): void
     {
         $this->postJson('/api/chat/start')->assertOk()->assertJsonStructure(['session_token']);

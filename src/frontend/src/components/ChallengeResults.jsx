@@ -18,6 +18,8 @@ const ChallengeResults = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [loggingOut, setLoggingOut] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
+  const [deletingAll, setDeletingAll] = useState(false);
 
   async function logout() {
     setLoggingOut(true);
@@ -41,6 +43,62 @@ const ChallengeResults = ({
         );
     } finally {
       setLoggingOut(false);
+    }
+  }
+
+  async function deleteChallenge(id) {
+    const confirmMsg = isEn
+      ? "Are you sure you want to delete this recorded conversation?"
+      : "هل أنت متأكد من رغبتك في حذف سجل هذه المحادثة؟";
+    if (!window.confirm(confirmMsg)) return;
+
+    setDeletingId(id);
+    setError("");
+    try {
+      await axios.delete(`${API_BASE_URL}/chat/challenges/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setChallenges((prev) => prev.filter((c) => c.id !== id));
+    } catch (err) {
+      if ([401, 403].includes(err.response?.status)) {
+        onUnauthorized();
+        return;
+      }
+      setError(
+        isEn
+          ? "Unable to delete conversation record. Please try again."
+          : "تعذر حذف سجل المحادثة. حاول مرة أخرى."
+      );
+    } finally {
+      setDeletingId(null);
+    }
+  }
+
+  async function deleteAllChallenges() {
+    const confirmMsg = isEn
+      ? "Are you sure you want to permanently delete ALL recorded conversations? This cannot be undone."
+      : "هل أنت متأكد من رغبتك في حذف جميع المحادثات المسجلة نهائياً؟ لا يمكن التراجع عن هذا الإجراء.";
+    if (!window.confirm(confirmMsg)) return;
+
+    setDeletingAll(true);
+    setError("");
+    try {
+      await axios.delete(`${API_BASE_URL}/chat/challenges`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setChallenges([]);
+    } catch (err) {
+      if ([401, 403].includes(err.response?.status)) {
+        onUnauthorized();
+        return;
+      }
+      setError(
+        isEn
+          ? "Unable to clear all conversations. Please try again."
+          : "تعذر مسح جميع المحادثات. حاول مرة أخرى."
+      );
+    } finally {
+      setDeletingAll(false);
     }
   }
 
@@ -167,6 +225,7 @@ const ChallengeResults = ({
           isDark={isDark}
           lang={lang}
         />
+
         {error && (
           <p
             role="alert"
@@ -179,6 +238,42 @@ const ChallengeResults = ({
             {error}
           </p>
         )}
+
+        {/* Section Header with Bulk Actions */}
+        {!loading && challenges.length > 0 && (
+          <div className="flex justify-between items-center mb-4 px-1">
+            <span
+              className={`text-sm font-semibold ${
+                isDark ? "text-gray-400" : "text-gray-600"
+              }`}
+            >
+              {isEn
+                ? `Total recorded sessions: ${challenges.length}`
+                : `إجمالي الجلسات المسجلة: ${challenges.length}`}
+            </span>
+            <button
+              onClick={deleteAllChallenges}
+              disabled={deletingAll}
+              className={`text-xs font-bold px-3 py-1.5 rounded-lg border transition-colors flex items-center gap-1.5 ${
+                isDark
+                  ? "text-red-400 border-red-900/60 hover:bg-red-950/50"
+                  : "text-red-600 border-red-200 hover:bg-red-50"
+              } disabled:opacity-50`}
+            >
+              <span>🗑️</span>
+              <span>
+                {deletingAll
+                  ? isEn
+                    ? "Deleting..."
+                    : "جاري الحذف..."
+                  : isEn
+                  ? "Clear All Records"
+                  : "مسح جميع السجلات"}
+              </span>
+            </button>
+          </div>
+        )}
+
         {loading ? (
           <div
             className={`text-center py-20 ${
@@ -218,14 +313,16 @@ const ChallengeResults = ({
                       : "bg-gray-50 border-gray-100"
                   }`}
                 >
-                  <div
-                    className={`text-sm ${
-                      isDark ? "text-gray-400" : "text-gray-500"
-                    }`}
-                  >
-                    {isEn
-                      ? `Challenge #${challenges.length - index}`
-                      : `تحدي رقم #${challenges.length - index}`}
+                  <div className="flex justify-between items-center">
+                    <span
+                      className={`text-sm font-semibold ${
+                        isDark ? "text-gray-400" : "text-gray-500"
+                      }`}
+                    >
+                      {isEn
+                        ? `Challenge #${challenges.length - index}`
+                        : `تحدي رقم #${challenges.length - index}`}
+                    </span>
                   </div>
 
                   <div className="flex justify-between items-center text-sm">
@@ -304,7 +401,7 @@ const ChallengeResults = ({
                   </div>
 
                   <div
-                    className={`text-xs mt-2 ${
+                    className={`text-xs mt-1 ${
                       isEn ? "text-right" : "text-left"
                     } ${isDark ? "text-gray-500" : "text-gray-400"}`}
                   >
@@ -316,10 +413,32 @@ const ChallengeResults = ({
                       }
                     )}
                   </div>
+
+                  {/* Delete Single Conversation Button */}
+                  <button
+                    onClick={() => deleteChallenge(challenge.id)}
+                    disabled={deletingId === challenge.id}
+                    className={`mt-2 w-full py-2 px-3 rounded-lg text-xs font-bold border transition-colors flex items-center justify-center gap-1.5 ${
+                      isDark
+                        ? "text-red-400 border-red-900/50 hover:bg-red-950/40"
+                        : "text-red-600 border-red-200 hover:bg-red-50"
+                    } disabled:opacity-50`}
+                  >
+                    <span>🗑️</span>
+                    <span>
+                      {deletingId === challenge.id
+                        ? isEn
+                          ? "Deleting..."
+                          : "جاري الحذف..."
+                        : isEn
+                        ? "Delete Conversation"
+                        : "حذف المحادثة"}
+                    </span>
+                  </button>
                 </div>
 
                 {/* Conversation Output */}
-                <div className="w-full md:w-2/3 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
+                <div className="w-full md:w-2/3 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
                   <h3
                     className={`text-sm font-bold mb-3 sticky top-0 pb-2 ${
                       isDark

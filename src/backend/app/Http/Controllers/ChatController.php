@@ -104,4 +104,30 @@ class ChatController extends Controller
             'challenges' => $challenges,
         ])->header('Cache-Control', 'no-store');
     }
+
+    public function deleteChallenge($id)
+    {
+        $challenge = ChallengeSession::findOrFail($id);
+
+        if ($challenge->conversation) {
+            $challenge->conversation->delete();
+        } else {
+            $challenge->delete();
+        }
+
+        return response()->json([
+            'message' => 'Conversation deleted successfully.',
+        ]);
+    }
+
+    public function deleteAllChallenges()
+    {
+        Conversation::query()->delete();
+        ChallengeSession::query()->delete();
+        Message::query()->delete();
+
+        return response()->json([
+            'message' => 'All conversations deleted successfully.',
+        ]);
+    }
 }

@@ -31,4 +31,10 @@ Route::prefix('chat')->group(function () {
     Route::get('/challenges', [ChatController::class, 'getAllChallenges'])
         ->withoutMiddleware(EnsureFrontendRequestsAreStateful::class)
         ->middleware(['auth:sanctum', EnsureAdmin::class]);
+    Route::delete('/challenges/{id}', [ChatController::class, 'deleteChallenge'])
+        ->withoutMiddleware(EnsureFrontendRequestsAreStateful::class)
+        ->middleware(['auth:sanctum', EnsureAdmin::class]);
+    Route::delete('/challenges', [ChatController::class, 'deleteAllChallenges'])
+        ->withoutMiddleware(EnsureFrontendRequestsAreStateful::class)
+        ->middleware(['auth:sanctum', EnsureAdmin::class]);
 });
