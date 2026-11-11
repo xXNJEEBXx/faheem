@@ -2,6 +2,17 @@
 
 return [
 
+    'openrouter' => [
+        'key' => env('OPENROUTER_API_KEY'),
+        'model' => env('OPENROUTER_MODEL', 'deepseek/deepseek-v4.1-flash-1017'),
+    ],
+
+    'gemini' => [
+        'key' => env('GEMINI_API_KEY'),
+        'model' => env('GEMINI_MODEL', 'gemini-3.5-flash'),
+        'daily_limit' => (int) env('GEMINI_DAILY_REQUEST_LIMIT', 1000),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Third Party Services

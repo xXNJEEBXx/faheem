@@ -121,3 +121,44 @@ Faheem (فهيم): The Human-Centric AI for Absher
 10. الخاتمة (Conclusion)
 
 مشروع "فهيم" يمثل مستقبل الخدمات الحكومية؛ مساعد رقمي ذكي، فطن، ومتحدث لبق. نحن لا نبني مجرد "بوت" للرد الآلي، بل نبني واجهة حضارية لمنصة أبشر، تفهم المواطن، تتحدث لغته، وتنجز خدمته بروح إنسانية وكفاءة تقنية، محققين بذلك مستهدفات رؤية 2030 في تحسين جودة الحياة والريادة الرقمية.
+
+
+## Administrator access (M3 implementation)
+
+Source layout:
+- `src/backend/app/Models/Admin.php`: administrator accounts, with hashed passwords in `admins`.
+- `src/backend/app/Http/Controllers/AdminAuthController.php`: login, authenticated registration, and logout.
+- `src/backend/app/Http/Middleware/EnsureAdmin.php`: rejects non-administrator accounts.
+- `src/backend/app/Console/Commands/CreateAdmin.php`: interactive initial account creation.
+- `src/frontend/src/components/AdminLogin.jsx`: sign-in screen.
+- `src/frontend/src/components/AdminRegistration.jsx`: account creation inside the protected results page.
+- `src/backend/tests/Feature/AdminAccessTest.php`: isolated authorization and authentication tests.
+
+After deploying the updated backend, run these commands from `src/backend` against the intended database:
+
+```sh
+php artisan migrate --force
+php artisan admin:create
+```
+
+The account creation command prompts for a name, email, and a hidden password plus confirmation. Passwords must contain at least 12 characters, uppercase/lowercase letters and a number. No default production account is provided. Existing admins can create additional admins from the dashboard; public registration is disabled.
+
+The landing-page `Admin` button opens sign-in, then the existing challenge results and conversation records. The landing-page scripted conversation remains a demonstration.
+
+API:
+- `POST /api/admin/login`: email/password, limited to 5 requests per minute per IP.
+- `POST /api/admin/register`: authenticated administrator only.
+- `POST /api/admin/logout`: revokes the current token.
+- `GET /api/chat/challenges`: authenticated administrator only, no longer public.
+
+Because the frontend and API use different hosting domains, the dashboard sends a short-lived Sanctum bearer token in the Authorization header. The token expires after two hours and stays in React memory; refreshing the page requires signing in again. Passwords and access tokens are not written to browser storage. Keep the API on HTTPS in production. This deployment choice uses Sanctum's [token authentication](https://laravel.com/docs/12.x/sanctum#api-token-authentication).
+
+Validation on 21 October 2026: backend suite passed 14 tests / 55 assertions against isolated SQLite; frontend production build and lint of changed files passed. Local browser verification covered the sign-in gate, successful login, account form, and logout. Screenshot: `src/frontend/tests/admin-dashboard-local.png` (local test database, not production evidence).
+
+These changes are local. Production migration, initial administrator creation, and deployment still need to be performed before capturing final M3 evidence.
+
+## Gemini backend proxy
+
+The challenge now calls Laravel's `POST /api/chat/generate`. Provider credentials and persona prompts live on the server. Configure `GEMINI_API_KEY` on the Laravel service only; `GEMINI_MODEL` selects the provider model and `GEMINI_DAILY_REQUEST_LIMIT` limits daily requests. The frontend needs only its public `VITE_API_URL`.
+
+The proxy validates active sessions and bounded history, limits requests, and returns generated text or a sanitized error. Transport/provider errors are displayed separately and are not saved as model replies. See [SECURITY_SETUP.md](SECURITY_SETUP.md) for credential replacement and deployment steps. The old exposed key must be revoked; editing source does not erase Git history or old deployments.

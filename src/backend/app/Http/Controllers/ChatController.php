@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use App\Models\ChallengeSession;
 use App\Models\Conversation;
 use App\Models\Message;
-use App\Models\ChallengeSession;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ChatController extends Controller
 {
@@ -20,7 +19,7 @@ class ChatController extends Controller
 
         return response()->json([
             'session_token' => $conversation->session_token,
-            'message' => 'Conversation started successfully.'
+            'message' => 'Conversation started successfully.',
         ]);
     }
 
@@ -29,7 +28,7 @@ class ChatController extends Controller
         $request->validate([
             'session_token' => 'required|string|exists:conversations,session_token',
             'message' => 'required|string',
-            'sender_type' => 'required|in:user,ai'
+            'sender_type' => 'required|in:user,ai',
         ]);
 
         $conversation = Conversation::where('session_token', $request->input('session_token'))->firstOrFail();
@@ -42,12 +41,12 @@ class ChatController extends Controller
         $message = Message::create([
             'conversation_id' => $conversation->id,
             'sender_type' => $request->input('sender_type'),
-            'content' => $request->input('message')
+            'content' => $request->input('message'),
         ]);
 
         return response()->json([
             'saved_message' => $message,
-            'state' => 'success'
+            'state' => 'success',
         ]);
     }
 
@@ -56,7 +55,7 @@ class ChatController extends Controller
         $request->validate([
             'session_token' => 'required|string|exists:conversations,session_token',
             'user_guess' => 'required|in:ai,human',
-            'actual_identity' => 'required|in:ai,human'
+            'actual_identity' => 'required|in:ai,human',
         ]);
 
         $conversation = Conversation::where('session_token', $request->input('session_token'))->firstOrFail();
@@ -68,21 +67,21 @@ class ChatController extends Controller
             'conversation_id' => $conversation->id,
             'user_guess' => $request->input('user_guess'),
             'actual_identity' => $actualIdentity,
-            'is_correct' => $isCorrect
+            'is_correct' => $isCorrect,
         ]);
 
         $conversation->update(['status' => 'ended']);
 
         return response()->json([
             'challenge_result' => $challengeSession,
-            'message' => 'Challenge result submitted successfully.'
+            'message' => 'Challenge result submitted successfully.',
         ]);
     }
 
     public function getConversationHistory(Request $request)
     {
         $request->validate([
-            'session_token' => 'required|string|exists:conversations,session_token'
+            'session_token' => 'required|string|exists:conversations,session_token',
         ]);
 
         $conversation = Conversation::where('session_token', $request->query('session_token'))
@@ -90,7 +89,7 @@ class ChatController extends Controller
             ->firstOrFail();
 
         return response()->json([
-            'conversation' => $conversation
+            'conversation' => $conversation,
         ]);
     }
 
@@ -102,7 +101,7 @@ class ChatController extends Controller
         }])->orderBy('created_at', 'desc')->get();
 
         return response()->json([
-            'challenges' => $challenges
-        ]);
+            'challenges' => $challenges,
+        ])->header('Cache-Control', 'no-store');
     }
 }

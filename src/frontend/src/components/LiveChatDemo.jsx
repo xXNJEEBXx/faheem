@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import FaheemAvatar from "./FaheemAvatar";
 
-const SCENARIOS = [
+const SCENARIOS_AR = [
   {
     title: "تجديد الرخصة 🚗",
     script: [
@@ -105,7 +105,113 @@ const SCENARIOS = [
   },
 ];
 
-const LiveChatDemo = () => {
+const SCENARIOS_EN = [
+  {
+    title: "License Renewal 🚗",
+    script: [
+      {
+        type: "text",
+        sender: "user",
+        content: "Hello, what are the steps to renew my driving license?",
+        delay: 1000,
+      },
+      { type: "state", state: "thinking", duration: 1500 },
+      {
+        type: "text",
+        sender: "faheem",
+        state: "smile",
+        content:
+          "Hello and welcome, Ahmed 👋! Looking at your profile, you only need a medical checkup, then you can renew for the duration that suits you:\n\n• 40 SAR for 1 year\n• 80 SAR for 2 years\n• 200 SAR for 5 years\n• 400 SAR for 10 years\n\nHappy to serve you! Let me know if you need anything else ✨",
+        delay: 500,
+      },
+    ],
+  },
+  {
+    title: "Add Newborn 👶",
+    script: [
+      {
+        type: "text",
+        sender: "user",
+        content: "Thank God we had a baby today, I'd like to add him to the family card.",
+        delay: 1000,
+      },
+      { type: "state", state: "wink", duration: 1000 },
+      {
+        type: "text",
+        sender: "faheem",
+        state: "smile",
+        content:
+          "Congratulations, Ali! May your newborn bring you endless joy and blessings ❤️.",
+        delay: 500,
+      },
+      { type: "state", state: "thinking", duration: 1500 },
+      {
+        type: "text",
+        sender: "faheem",
+        state: "idle",
+        content:
+          "All set, Ali! The hospital has already submitted the birth notification electronically. You only need to pay the certificate issuance fee and it will be delivered right to your doorstep.",
+        delay: 500,
+      },
+    ],
+  },
+  {
+    title: "Vehicle Auth 🔑",
+    script: [
+      {
+        type: "text",
+        sender: "user",
+        content: "How can I issue a driving authorization for my son Mohammed?",
+        delay: 1000,
+      },
+      { type: "state", state: "thinking", duration: 1000 },
+      {
+        type: "text",
+        sender: "faheem",
+        state: "smile",
+        content:
+          "Welcome back! Faheem at your service 😎👍. Since Mohammed is listed as your dependent and holds a valid license, this will take a minute. Do you want it (Domestic only)? And for which dates?",
+        delay: 500,
+      },
+      {
+        type: "text",
+        sender: "user",
+        content: "Yes, domestic only, starting tomorrow morning for one week.",
+        delay: 1500,
+      },
+      { type: "state", state: "thinking", duration: 1500 },
+      {
+        type: "card",
+        sender: "faheem",
+        content: {
+          title: "⚠️ Confirm Vehicle Authorization",
+          body: "Do you approve issuing a domestic authorization for the following vehicle?",
+          details: [
+            "Vehicle: F N H 5515 (Suzuki Dzire)",
+            "Authorized Driver: Mohammed (ID: 112003212)",
+            "From: 13-12-2025",
+            "To: 20-12-2025",
+          ],
+          actions: ["❌ Cancel", "✅ Approve & Issue"],
+        },
+        delay: 500,
+      },
+      { type: "action_click", target: "✅ Approve & Issue", delay: 1500 },
+      {
+        type: "text",
+        sender: "faheem",
+        state: "wink",
+        content:
+          "Approved ✅ The authorization is now active for one week. Always happy to help!",
+        delay: 1000,
+      },
+    ],
+  },
+];
+
+const LiveChatDemo = ({ isDark = false, lang = "en" }) => {
+  const isEn = lang === "en";
+  const scenarios = isEn ? SCENARIOS_EN : SCENARIOS_AR;
   const [activeScenario, setActiveScenario] = useState(0);
   const [messages, setMessages] = useState([]);
   const [avatarState, setAvatarState] = useState("idle");
@@ -148,7 +254,7 @@ const LiveChatDemo = () => {
   useEffect(() => {
     if (!isVisible) return;
 
-    const currentScript = SCENARIOS[activeScenario].script;
+    const currentScript = scenarios[activeScenario].script;
 
     if (step < currentScript.length) {
       const action = currentScript[step];
@@ -161,7 +267,7 @@ const LiveChatDemo = () => {
       if (action.type === "state") {
         setAvatarState(action.state);
         timeout = setTimeout(() => {
-          setAvatarState("idle"); // Revert to idle after duration unless next step sets it
+          setAvatarState("idle");
           processNextStep();
         }, action.duration);
       } else if (action.type === "text" || action.type === "card") {
@@ -187,16 +293,19 @@ const LiveChatDemo = () => {
         setMessages([]);
         setStep(0);
         setAvatarState("idle");
-        setActiveScenario((prev) => (prev + 1) % SCENARIOS.length);
+        setActiveScenario((prev) => (prev + 1) % scenarios.length);
       }, 10000);
       return () => clearTimeout(timeout);
     }
-  }, [isVisible, step, activeScenario]);
+  }, [isVisible, step, activeScenario, scenarios]);
 
   return (
     <div
       ref={containerRef}
-      className="w-full max-w-md mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden border-4 border-gray-100 transform transition-all hover:scale-[1.02]"
+      dir={isEn ? "ltr" : "rtl"}
+      className={`w-full max-w-md mx-auto rounded-3xl shadow-2xl overflow-hidden border-4 transform transition-all hover:scale-[1.02] ${
+        isDark ? "bg-gray-800 border-gray-700" : "bg-white border-gray-100"
+      }`}
     >
       {/* Header */}
       <div className="bg-absher-green p-4 flex items-center gap-3 text-white transition-colors duration-300">
@@ -206,7 +315,7 @@ const LiveChatDemo = () => {
           className="w-10 h-10 rounded-full"
         />
         <div>
-          <div className="font-bold">فهيم</div>
+          <div className="font-bold">{isEn ? "Faheem" : "فهيم"}</div>
           <div className="text-xs opacity-90 flex items-center gap-1">
             <span
               className={`w-1.5 h-1.5 rounded-full ${
@@ -215,18 +324,30 @@ const LiveChatDemo = () => {
                   : "bg-green-400 animate-pulse"
               }`}
             ></span>
-            {avatarState === "thinking" ? "يفكر..." : "متصل الآن"}
+            {avatarState === "thinking"
+              ? isEn
+                ? "Thinking..."
+                : "يفكر..."
+              : isEn
+              ? "Online now"
+              : "متصل الآن"}
           </div>
         </div>
-        <div className="mr-auto text-xs bg-white/20 px-2 py-1 rounded-full">
-          {SCENARIOS[activeScenario].title}
+        <div
+          className={`${
+            isEn ? "ml-auto" : "mr-auto"
+          } text-xs bg-white/20 px-2 py-1 rounded-full`}
+        >
+          {scenarios[activeScenario].title}
         </div>
       </div>
 
       {/* Chat Area */}
       <div
         ref={chatAreaRef}
-        className="h-[450px] bg-gray-50 p-4 overflow-y-auto flex flex-col gap-3"
+        className={`h-[450px] p-4 overflow-y-auto flex flex-col gap-3 transition-colors duration-300 ${
+          isDark ? "bg-gray-900" : "bg-gray-50"
+        }`}
       >
         {messages.map((msg, idx) => (
           <div
@@ -240,6 +361,8 @@ const LiveChatDemo = () => {
                 className={`max-w-[85%] p-3 rounded-2xl text-sm leading-relaxed shadow-sm whitespace-pre-line ${
                   msg.sender === "user"
                     ? "bg-absher-green text-white rounded-br-none"
+                    : isDark
+                    ? "bg-gray-800 text-gray-100 border border-gray-700 rounded-bl-none"
                     : "bg-white text-gray-800 border border-gray-100 rounded-bl-none"
                 }`}
               >
@@ -248,25 +371,59 @@ const LiveChatDemo = () => {
             )}
 
             {msg.type === "card" && (
-              <div className="max-w-[90%] bg-white border border-gray-200 rounded-xl shadow-md overflow-hidden rounded-bl-none">
-                <div className="bg-gray-50 p-3 border-b border-gray-100 font-bold text-gray-700 text-sm flex items-center gap-2">
+              <div
+                className={`max-w-[90%] border rounded-xl shadow-md overflow-hidden rounded-bl-none ${
+                  isDark
+                    ? "bg-gray-800 border-gray-700"
+                    : "bg-white border-gray-200"
+                }`}
+              >
+                <div
+                  className={`p-3 border-b font-bold text-sm flex items-center gap-2 ${
+                    isDark
+                      ? "bg-gray-900/60 border-gray-700 text-gray-200"
+                      : "bg-gray-50 border-gray-100 text-gray-700"
+                  }`}
+                >
                   {msg.content.title}
                 </div>
                 <div className="p-3 space-y-2">
-                  <p className="text-sm text-gray-800">{msg.content.body}</p>
-                  <div className="bg-gray-50 p-2 rounded text-xs text-gray-600 space-y-1">
+                  <p
+                    className={`text-sm ${
+                      isDark ? "text-gray-200" : "text-gray-800"
+                    }`}
+                  >
+                    {msg.content.body}
+                  </p>
+                  <div
+                    className={`p-2 rounded text-xs space-y-1 ${
+                      isDark
+                        ? "bg-gray-900/60 text-gray-300"
+                        : "bg-gray-50 text-gray-600"
+                    }`}
+                  >
                     {msg.content.details.map((detail, i) => (
                       <div key={i}>{detail}</div>
                     ))}
                   </div>
                 </div>
-                <div className="flex border-t border-gray-100 divide-x divide-x-reverse divide-gray-100">
+                <div
+                  className={`flex border-t divide-x ${
+                    isEn ? "" : "divide-x-reverse"
+                  } ${
+                    isDark
+                      ? "border-gray-700 divide-gray-700"
+                      : "border-gray-100 divide-gray-100"
+                  }`}
+                >
                   {msg.content.actions.map((action, i) => (
                     <button
                       key={i}
                       className={`flex-1 py-2 text-sm font-medium transition-colors ${
                         clickedAction === action
                           ? "bg-absher-green text-white"
+                          : isDark
+                          ? "text-emerald-400 hover:bg-gray-700"
                           : "text-absher-green hover:bg-gray-50"
                       }`}
                     >
@@ -281,7 +438,13 @@ const LiveChatDemo = () => {
 
         {avatarState === "thinking" && (
           <div className="flex justify-end animate-fade-in">
-            <div className="bg-white p-3 rounded-2xl rounded-bl-none shadow-sm border border-gray-100 flex gap-1">
+            <div
+              className={`p-3 rounded-2xl rounded-bl-none shadow-sm border flex gap-1 ${
+                isDark
+                  ? "bg-gray-800 border-gray-700"
+                  : "bg-white border-gray-100"
+              }`}
+            >
               <span
                 className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"
                 style={{ animationDelay: "0ms" }}
@@ -300,10 +463,14 @@ const LiveChatDemo = () => {
       </div>
 
       {/* Fake Input Area */}
-      <div className="p-3 bg-white border-t border-gray-100 flex gap-2 items-center opacity-50 pointer-events-none">
+      <div
+        className={`p-3 border-t flex gap-2 items-center opacity-50 pointer-events-none ${
+          isDark ? "bg-gray-800 border-gray-700" : "bg-white border-gray-100"
+        }`}
+      >
         <div className="w-8 h-8 bg-absher-green rounded-full flex items-center justify-center text-white">
           <svg
-            className="w-4 h-4 transform rotate-180"
+            className={`w-4 h-4 transform ${isEn ? "rotate-90" : "rotate-180"}`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -316,7 +483,11 @@ const LiveChatDemo = () => {
             ></path>
           </svg>
         </div>
-        <div className="flex-1 h-10 bg-gray-100 rounded-full"></div>
+        <div
+          className={`flex-1 h-10 rounded-full ${
+            isDark ? "bg-gray-700" : "bg-gray-100"
+          }`}
+        ></div>
       </div>
     </div>
   );
