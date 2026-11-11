@@ -356,7 +356,7 @@ const AboutFaheem = ({
                 : "نسخة تجريبية - Demo Version"}
             </p>
             <p className="text-sm opacity-90">
-              {isEn ? "© 2025 Faheem Team" : "© 2025 فريق فهيم"}
+              {isEn ? "© 2026 Faheem Team" : "© 2026 فريق فهيم"}
             </p>
           </div>
         </section>
@@ -369,8 +369,8 @@ const AboutFaheem = ({
         }`}
       >
         {isEn
-          ? "Developed by Faheem Team © 2025"
-          : "تطوير فريق فهيم © 2025"}
+          ? "Developed by Faheem Team © 2026"
+          : "تطوير فريق فهيم © 2026"}
       </footer>
     </div>
   );

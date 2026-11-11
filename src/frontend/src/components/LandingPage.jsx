@@ -179,8 +179,8 @@ const LandingPage = ({
         }`}
       >
         {isEn
-          ? "Developed by Faheem Team © 2025"
-          : "تطوير فريق فهيم © 2025"}
+          ? "Developed by Faheem Team © 2026"
+          : "تطوير فريق فهيم © 2026"}
       </footer>
     </div>
   );

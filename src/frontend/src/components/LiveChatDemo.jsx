@@ -85,8 +85,8 @@ const SCENARIOS_AR = [
           details: [
             "المركبة: ف ن ه 5515 (سوزوكي ديزاير)",
             "للمفوض له: محمد (هوية وطنية: 112003212)",
-            "من: 13-12-2025",
-            "إلى: 20-12-2025",
+            "من: 13-12-2026",
+            "إلى: 20-12-2026",
           ],
           actions: ["❌ إلغاء", "✅ موافق واعتماد"],
         },
@@ -189,8 +189,8 @@ const SCENARIOS_EN = [
           details: [
             "Vehicle: F N H 5515 (Suzuki Dzire)",
             "Authorized Driver: Mohammed (ID: 112003212)",
-            "From: 13-12-2025",
-            "To: 20-12-2025",
+            "From: 13-12-2026",
+            "To: 20-12-2026",
           ],
           actions: ["❌ Cancel", "✅ Approve & Issue"],
         },
