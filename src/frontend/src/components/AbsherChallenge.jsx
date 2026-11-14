@@ -25,7 +25,7 @@ const AbsherChallenge = ({
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const [opponentType, setOpponentType] = useState(null); // 'faheem' or 'human'
+  const [opponentType, setOpponentType] = useState("faheem");
   const messagesEndRef = useRef(null);
   const [verdict, setVerdict] = useState(null);
   const [requestError, setRequestError] = useState("");
@@ -307,7 +307,7 @@ const AbsherChallenge = ({
 
     setTimeout(() => {
       setGameState("playing");
-      setOpponentType(Math.random() > 0.5 ? "faheem" : "human");
+      setOpponentType("faheem");
       setMessages([]);
     }, 3000);
   };
