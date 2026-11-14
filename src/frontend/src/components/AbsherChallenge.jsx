@@ -680,7 +680,50 @@ const AbsherChallenge = ({
                       : "bg-white border-white"
                   }`}
                 >
-                  <span className="text-8xl">🛡️</span>
+                  <svg
+                    className="w-24 h-24 text-[#007C5A] dark:text-emerald-400 drop-shadow-md transform group-hover:scale-110 transition-transform duration-300"
+                    viewBox="0 0 64 64"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <defs>
+                      <linearGradient
+                        id="arenaShieldGrad"
+                        x1="12"
+                        y1="6"
+                        x2="52"
+                        y2="58"
+                        gradientUnits="userSpaceOnUse"
+                      >
+                        <stop offset="0%" stopColor="#10B981" />
+                        <stop offset="100%" stopColor="#007C5A" />
+                      </linearGradient>
+                    </defs>
+                    <path
+                      d="M32 6L12 14V30C12 43.8 20.5 55.9 32 60C43.5 55.9 52 43.8 52 30V14L32 6Z"
+                      fill="url(#arenaShieldGrad)"
+                      fillOpacity="0.18"
+                      stroke="url(#arenaShieldGrad)"
+                      strokeWidth="3.5"
+                      strokeLinejoin="round"
+                    />
+                    <circle
+                      cx="32"
+                      cy="31"
+                      r="11"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeDasharray="4 3"
+                    />
+                    <path
+                      d="M32 23V27M32 35V39M24 31H28M36 31H40"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                    />
+                    <circle cx="32" cy="31" r="3" fill="currentColor" />
+                  </svg>
                 </div>
               </div>
 
